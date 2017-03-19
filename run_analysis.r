@@ -42,7 +42,14 @@ data <- rbind(test,train)
 # Step 2:Appropriately labels the data set with descriptive variable names.
 ## features[["V2"]] column contains column header information for X data
 ## Also name the y column "Activity" and the subject column "Subject"
+## Replace the acronyms in the column titles with descriptive names
 names(data)<- c(features[["V2"]],"Activity","Subject")
+names(data)<-gsub("^t", "time", names(data))
+names(data)<-gsub("^f", "frequency", names(data))
+names(data)<-gsub("Acc", "Accelerometer", names(data))
+names(data)<-gsub("Gyro", "Gyroscope", names(data))
+names(data)<-gsub("Mag", "Magnitude", names(data))
+names(data)<-gsub("BodyBody", "Body", names(data))
 
 # Step 3: Extract only the measurements on the mean and standard deviation for each measurement.
 ## Store names from all columns
@@ -70,6 +77,8 @@ secondset<- aggregate(merged[,1:(ncol(merged)-3)],by = list(Activity=merged$Acti
 secondset<- merge(activitylabels,secondset,by = "Activity")
 ## Arrange the secondset dataframe for easier viewing
 secondset<- arrange(secondset,Subject)
+## Drop Activity column
+secondset$Activity<- NULL
 ## Write secondset as tidyData.txt
-write.table(secondset, './repo/tidyData.txt',row.names=TRUE,sep='\t')
+write.table(secondset, './repo/tidyData.txt',row.names=FALSE ,sep='\t')
 
